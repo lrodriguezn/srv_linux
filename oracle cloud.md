@@ -12,7 +12,7 @@
     Agregar al archivo rules.v4 las siguientes lineas
 
 > -A INPUT -p tcp -m state --state NEW -m tcp --dport 80 -j ACCEPT \
-> -A INPUT -p tcp -m state --state NEW -m tcp --dport 443 -j ACCEPT \
+> -A INPUT -p tcp -m state --state NEW -m tcp --dport 443 -j ACCEPT
 
 `Comando para actualizar iptable `
 
@@ -27,5 +27,5 @@
 > sudo apt update \
 > sudo apt upgrade -y \
 > curl -fsSL https://get.docker.com -o get-docker.sh \
-> sudo sh get-docker.sh \
+> sudo sh get-docker.sh
 
