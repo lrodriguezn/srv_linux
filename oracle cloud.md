@@ -1,3 +1,6 @@
+
+
+
 # Puntos a tener en cuenta al crear instancia
 ## Como Habilitar los puertos 80 y 443 ?
 >
@@ -20,12 +23,9 @@
  [Comprobador de propagación DNS](https://whatsmydns.me/es#A/www.lgyss.click)
  5. Video youtube  [fixing_access_issues_open_ports_on_oracle_clouds](Agregar%20la%20Ip%20de%20la%20instancia%20en%20cloudflare%20y%20posteriormente%20validar%20la%20propagacion%20de%20la%20Ip%20%20%5BComprobador%20de%20propagaci%C3%B3n%20DNS%5D%28https://whatsmydns.me/es#A/www.lgyss.click%29)
  
- 
- 
-
 ## Instalar docker
->sudo apt update
->sudo apt upgrade -y
->curl -fsSL https://get.docker.com -o get-docker.sh
->sudo sh get-docker.sh
+> sudo apt update
+> sudo apt upgrade -y
+> curl -fsSL https://get.docker.com -o get-docker.sh
+> sudo sh get-docker.sh
 
