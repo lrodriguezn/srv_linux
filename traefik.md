@@ -44,3 +44,15 @@ lgyss:\$\$apr1\$\$o7s9ia5p\$\$7Ovc5Cwd.DS1O8GBosjbE0
 > ss -nltp   --permite validar si el docker esta escuchando en el puerto 80
 
  - probar la respuesta del contenedor traefik.lgyss.click
+ - Comprobar que el sitio genero el certificado
+> cd datos \
+> nano acme.json
+
+- Si el archivo acme.json genero el certificado se debe cambiar a utilizar el certificado de produccion
+> cd datos \
+> rm acme.json \
+> touch acme.json \
+> chmod 600 acme.json \
+> nano traefik.yml \
+> caServer: https://acme-v02.api.letsencrypt.org/directory # Servidor ACME de Let's Encrypt (producción) \
+> #caServer: https://acme-staging-v02.api.letsencrypt.org/directory # Servidor ACME de Let's Encrypt para pruebas (opcional)
