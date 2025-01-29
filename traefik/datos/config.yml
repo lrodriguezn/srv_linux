@@ -1,0 +1,86 @@
+# Sección http de la configuración de Traefik
+http:
+  #region routers (Bloque de comentarios para definir routers)
+  routers:
+    # Define un router llamado "proxmox"
+    proxmox:
+      # Indica el punto de entrada para este router (solo HTTPS)
+      entryPoints:
+        - "https"
+      # Define una regla para el router. Solo atiende tráfico dirigido al host "pve.local.nshlab.de"
+      rule: "Host(`pve.local.nshlab.de`)"
+      # Define middlewares que se aplicarán a este router
+      middlewares:
+        # Aplica el middleware "default-headers" (definido más adelante)
+        - default-headers
+        # Aplica el middleware "https-redirectscheme" (definido más adelante)
+        - https-redirectscheme
+      # Habilita TLS para este router (requiere certificado SSL válido)
+      tls: {}
+      # Enruta el tráfico a un servicio llamado "proxmox" (definido más adelante)
+      service: proxmox
+    # Define otro router llamado "pihole" (configuración pendiente)
+    pihole:
+      # ... (agregar la configuración específica para el router "pihole")
+  #endregion (Fin del bloque de comentarios para routers)
+  #region services (Bloque de comentarios para definir servicios)
+  services:
+    # Define un servicio llamado "proxmox"
+    proxmox:
+      # Configura el balanceador de carga para este servicio
+      loadBalancer:
+        # Define los servidores a los que se distribuirá la carga
+        servers:
+          # Agrega un servidor con la URL "https://10.10.100.11:8006"
+          - url: "https://10.10.100.11:8006"
+        # Indica que se debe incluir el encabezado Host en la solicitud al servidor
+        passHostHeader: true
+  #endregion (Fin del bloque de comentarios para servicios)
+  # Define middlewares (filtros de tráfico) utilizados por los routers
+  middlewares:
+    # Middleware "https-redirectscheme" (redirecciona a HTTPS)
+    https-redirectscheme:
+      # Define la configuración de redirección
+      redirectScheme:
+        # Indica que se debe redirigir a HTTPS
+        scheme: https
+        # Indica que la redirección debe ser permanente (código de estado 301)
+        permanent: true
+    # Middleware "default-headers" (añade encabezados de seguridad)
+    default-headers:
+      # Define los encabezados que se añadirán a las respuestas
+      headers:
+        # Previene ataques Clickjacking (X-Frame-Options)
+        frameDeny: true
+        # Filtra ataques XSS en el navegador (X-XSS-Protection)
+        browserXssFilter: true
+        # Evita la detección del tipo de contenido por el navegador (X-Content-Type-Options)
+        contentTypeNosniff: true
+        # Fuerza el encabezado Strict-Transport-Security (STS)
+        forceSTSHeader: true
+        # Incluye subdominios en la política de seguridad STS
+        stsIncludeSubdomains: true
+        # Precarga la política STS en los navegadores
+        stsPreload: true
+        # Define la duración de la política STS en segundos (6 meses)
+        stsSeconds: 15552000
+        # Define el valor personalizado del encabezado X-Frame-Options
+        customFrameOptionsValue: SAMEORIGIN
+        # Añade un encabezado personalizado X-Forwarded-Proto con valor "https"
+        customRequestHeaders:
+          X-Forwarded-Proto: https
+    # Middleware "default-whitelist" (permite lista blanca de IPs)
+    default-whitelist:
+      # Define una lista de IPs permitidas
+      ipAllowList:
+        # Define rangos de IPs permitidas
+        sourceRange:
+          - "10.0.0.0/8" # Red privada 10.0.0.0 - 10.255.255.255
+          - "192.168.0.0/16" # Red privada 192.168.0.0 - 192.168.255.255
+          - "172.16.0.0/12" # Red privada 172.16.0.0 - 172.31.255.255
+    # Middleware "secured" (cadena de middlewares de seguridad)
+    secured:
+      chain:
+        middlewares:
+          - default-whitelist
+          - default-headers

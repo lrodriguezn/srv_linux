@@ -1,0 +1,50 @@
+services: # Define la sección de servicios del archivo docker-compose
+  traefik: # Define un servicio llamado traefik
+    image: traefik:latest # Utiliza la imagen oficial de traefik más reciente
+    container_name: traefik # Establece el nombre del contenedor a traefik
+    restart: unless-stopped # Reinicia el contenedor a menos que esté detenido
+    security_opt: # Opciones de seguridad
+      - no-new-privileges:true # Deshabilita privilegios para mayor seguridad del contenedor
+    networks: # Conecta el contenedor a la red proxy (definida más adelante)
+      - proxy
+    ports:
+      - 80:80 #(expone el puerto 80 del contenedor en el puerto 80 del host para tráfico HTTP)
+      - 443:443 #(expone el puerto 443 del contenedor en el puerto 80 del host para tráfico HTTPS)
+      - 8080:8080 #(expone el puerto 8080 del contenedor en el puerto 8080 del host para un servicio adicional)
+      # - 443:443/tcp #descomentar para usar HTTP3
+      # - 443:443/udp #descomentar para usar HTTP3
+    environment:
+      CF_DNS_API_TOKEN_FILE: /run/secrets/cloudflare_token # Establece la ruta al token de API de Cloudflare desde un secreto de Docker (más seguro)
+      # CF_DNS_API_TOKEN: ${CF_DNS_API_TOKEN} # Alternativa: usar variable de entorno desde el archivo .env (menos seguro, comentar la línea anterior)
+      TRAEFIK_DASHBOARD_CREDENTIALS: ${CREDENCIALES_DASHBOARD} # Establece credenciales para el panel de Traefik (reemplazar con el nombre real de la variable)
+    secrets: # Define secretos usados por el contenedor
+      - cloudflare_token # Referencia al secreto llamado cloudflare_token
+    env_file: .env # use .env        # Usa variables de entorno desde un archivo llamado .env
+    volumes:
+      - /etc/localtime:/etc/localtime:ro #Monta la información de zona horaria del host en el contenedor
+      - /var/run/docker.sock:/var/run/docker.sock:ro #Otorga acceso al socket de Docker para descubrimiento de servicios
+      - ./datos/traefik.yml:/traefik.yml:ro #Monta el archivo de configuración de Traefik
+      - ./datos/acme.json:/acme.json #Monta volumen para almacenar certificados
+      #- ./datos/config.yml:/config.yml:ro #Lo descomentaremos para usar nuestro Proxmox
+    labels:
+      - "traefik.enable=true" # Habilita el servicio Traefik
+      - "traefik.http.routers.traefik.entrypoints=http" # Define el punto de entrada para el panel de Traefik (usa HTTP)
+      - "traefik.http.routers.traefik.rule=Host(`traefik.lgyss.click`)" # Define una regla para enrutar el tráfico de `traefik-dashboard.local.nshlab.de` al servicio Traefik
+      - "traefik.http.middlewares.traefik-auth.basicauth.users=${CREDENCIALES_DASHBOARD}" # Define autenticación básica para el panel de Traefik (reemplazar con el nombre real de la variable)
+      - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=https" # Define middleware para redirigir el tráfico HTTP a HTTPS
+      - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https" # Define middleware para establecer la cabecera X-Forwarded-Proto para reconocimiento HTTPS
+      - "traefik.http.routers.traefik.middlewares=traefik-https-redirect" # Asocia el middleware de redirección con el router Traefik
+      - "traefik.http.routers.traefik-secure.entrypoints=https" # Define un router seguro para tráfico HTTPS
+      - "traefik.http.routers.traefik-secure.rule=Host(`traefik.lgyss.click`)" # Define una regla para el router seguro (misma que el router HTTP)
+      - "traefik.http.routers.traefik-secure.middlewares=traefik-auth" # Asocia el middleware de autenticación con el router seguro
+      - "traefik.http.routers.traefik-secure.tls=true" # Habilita TLS para el router seguro
+      - "traefik.http.routers.traefik-secure.tls.certresolver=cloudflare" # Utiliza el resolvedor de certificados de Cloudflare
+      - "traefik.http.routers.traefik-secure.tls.domains[0].main=lgyss.click" # Define el dominio principal y los nombres alternativos (SANs) para el certificado
+      - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.lgyss.click" # Define el dominio principal y los nombres alternativos (SANs) para el certificado
+      - "traefik.http.routers.traefik-secure.service=api@internal" # Asocia el router seguro con el servicio interno "api" (suponiendo que tienes un servicio llamado "api")
+secrets:
+  cloudflare_token:
+    file: ./cloudflare_token.txt # Especifica el archivo que contiene el token de Cloudflare
+networks:
+  proxy:
+    external: true # Indica que la red "proxy" es externa y ya existe

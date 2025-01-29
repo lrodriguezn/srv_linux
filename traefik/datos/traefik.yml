@@ -1,0 +1,34 @@
+# Habilita el panel de control de la API (opcional)
+api:
+  dashboard: true #habilita el dashboard
+  debug: true # Habilita el modo debug de la API (útil para depuración)
+entryPoints:
+  http:
+    address: ":80" #Punto de entrada HTTP (escucha en el puerto 80 por defecto)
+    http: # Configura redirecciones forzadas de HTTP a HTTPS
+      redirections:
+        entryPoint:
+          to: https # Redirigir a este punto de entrada
+          scheme: https # Forzar el esquema HTTPS
+  https: # Punto de entrada HTTPS (escucha en el puerto 443 por defecto)
+    address: ":443"
+serversTransport: # Configura la seguridad del transporte (evita advertencias de certificados no válidos)
+  insecureSkipVerify: true # Omitir la verificación de certificados (no recomendado en producción)
+providers: # Define los proveedores de servicios
+  docker: # Proveedor para servicios Docker
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false # Deshabilita la exposición automática de servicios Docker
+  #file:
+    #filename: /config.yml
+certificatesResolvers:
+  cloudflare:
+    acme: # Configura el módulo ACME para obtener certificados SSL
+      email: lrodriguezn.ctg@gmail.com
+      storage: acme.json # Archivo donde se almacenarán los certificados
+      #caServer: https://acme-v02.api.letsencrypt.org/directory # Servidor ACME de Let's Encrypt (producción)
+      caServer: https://acme-staging-v02.api.letsencrypt.org/directory # Servidor ACME de Let's Encrypt para pruebas (opcional)
+      dnsChallenge: # Configura el uso de Cloudflare para desafíos DNS
+        provider: cloudflare
+        resolvers: # Servidores DNS utilizados para resolver registros durante los desafíos
+          - "1.1.1.1:53"
+          - "1.0.0.1:53"
