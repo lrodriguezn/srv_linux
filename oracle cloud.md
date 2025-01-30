@@ -29,3 +29,4 @@
 > curl -fsSL https://get.docker.com -o get-docker.sh \
 > sudo sh get-docker.sh
 
+6. Generar el archivo .ppk con el archivo .key con puttyGen
