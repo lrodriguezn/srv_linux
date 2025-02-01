@@ -29,4 +29,14 @@
 > curl -fsSL https://get.docker.com -o get-docker.sh \
 > sudo sh get-docker.sh
 
-6. Generar el archivo .ppk con el archivo .key con puttyGen
+## Generar clave publica y privada para conectarse al repositorio y poder descargarlo
+1. Generar clave privada y publica para conectarse al repositorio de git
+   > ssh-keygen -t ed25519 -C "lrodriguezn.ctg@gmail.com"
+2. Agregar la clave publica que se genero en .shh a github
+3. Clonar repositorio
+   git clone 
+5. Al mensaje que sale se le da aceptar
+
+## Generar el archivo .ppk con el archivo .key descargado de la instancia y cargandolo en puttyGen.exe para conectarse con putty desde windows
+
+
