@@ -40,5 +40,5 @@
 ## Generar el archivo .ppk con el archivo .key descargado de la instancia y cargandolo en puttyGen.exe para conectarse con putty desde windows
 
 ## Agregar Ip de la instancia en CloudFlare/DNS y comprobar que la propagacion de dominio lgyss.click
-[cloudflare](https://www.cloudflare.com/)
+[Cloudflare](https://www.cloudflare.com/) \
 [Verificador de Propagación DNS](https://whatsmydns.me/es#A/www.lgyss.click)
