@@ -25,6 +25,7 @@
 
 ## Instalar Coolify para montar todo lo que se necesita y no usar docker uno por uno
 > https://www.youtube.com/watch?v=4Hp-diBp-2Q&list=PLqn8LMVmWaORTYqsRSM1Qb2uUfk5shpXg&index=2
+> Si utiliza esta herramienta no es necesario hacer el paso siguiente de instalar docker y tampoco instalar traefik
 
 ## Instalar docker
 > sudo apt update \
