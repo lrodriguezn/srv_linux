@@ -2,6 +2,9 @@
 
 
 # Puntos a tener en cuenta al crear instancia
+
+## Usuario de la instancia linux
+   ubuntu
 ## Como Habilitar los puertos 80 y 443 ?
 >
  1. Virtual cloud networks-Default Security List for 
