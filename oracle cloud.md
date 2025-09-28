@@ -22,7 +22,9 @@
  4. Agregar la Ip de la instancia en cloudflare y posteriormente validar la propagacion de la Ip
  [Comprobador de propagación DNS](https://whatsmydns.me/es#A/www.lgyss.click)
  5. Video youtube  [fixing_access_issues_open_ports_on_oracle_clouds](Agregar%20la%20Ip%20de%20la%20instancia%20en%20cloudflare%20y%20posteriormente%20validar%20la%20propagacion%20de%20la%20Ip%20%20%5BComprobador%20de%20propagaci%C3%B3n%20DNS%5D%28https://whatsmydns.me/es#A/www.lgyss.click%29)
- 
+##Instalar Coolify para montar todo lo que se necesita y no usar docker uno por uno
+> https://www.youtube.com/watch?v=4Hp-diBp-2Q&list=PLqn8LMVmWaORTYqsRSM1Qb2uUfk5shpXg&index=2
+
 ## Instalar docker
 > sudo apt update \
 > sudo apt upgrade -y \
