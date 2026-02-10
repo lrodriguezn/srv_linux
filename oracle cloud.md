@@ -1,4 +1,10 @@
+icacls "C:\dev\vps-oracle\srv_linux\ssh-key-2026-02-10.key" /remove:g "NT AUTHORITY\Usuarios autentificados"
+icacls "C:\dev\vps-oracle\srv_linux\ssh-key-2026-02-10.key" /remove:g "Usuarios"
+icacls "C:\dev\vps-oracle\srv_linux\ssh-key-2026-02-10.key" /remove:g "Todos"
+icacls "C:\dev\vps-oracle\srv_linux\ssh-key-2026-02-10.key" /inheritance:r
+icacls "C:\dev\vps-oracle\srv_linux\ssh-key-2026-02-10.key" /grant:r "${env:lgrodriguezn}:(R)
 
+ssh -i "C:\dev\vps-oracle\srv_linux\ssh-key-2026-02-10.key" ubuntu@157.151.225.165
 
 
 # Puntos a tener en cuenta al crear instancia
